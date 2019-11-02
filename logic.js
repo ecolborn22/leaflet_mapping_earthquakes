@@ -7,17 +7,27 @@ d3.json(queryUrl, function(data) {
   createFeatures(data.features);
 });
 
-function createFeatures(earthquakeData) {
+function createFeatures(earthquakeData) { // feature array
 
   // Define a function we want to run once for each feature in the features array
   // Give feature a popup with place, magnitude, date/time
+  // separated feature and layer (characteristic of geojson)
   function onEachFeature(feature, layer) {
+    var markerOptions = {
+      radius: 8,
+      fillColor: "#ff7800",
+      color: "#000",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.8
+    };
+    layer.marker(feature.coordinates, markerOptions);
     layer.bindPopup("<h3>" + feature.properties.place + "</h3><h4>" + feature.properties.mag + 
-    "magnitude </h4><hr><p>" + new Date(feature.properties.time) + "</p>");
+    " magnitude</h4><hr><p>" + new Date(feature.properties.time) + "</p>");
   }
-
+  
   // Create a GeoJSON layer containing the features array on the earthquakeData object
-  // Run the onEachFeature function once for each piece of data in the array
+  // Run the onEachFeature function once for each piece of data in the array -- CREATES LAYER
   var earthquakes = L.geoJSON(earthquakeData, {
     onEachFeature: onEachFeature
   });
@@ -61,7 +71,7 @@ function createMap(earthquakes) {
 
   // Create overlay object to hold our overlay layer
   var overlayMaps = {
-    Earthquakes: earthquakes
+    Earthquakes: earthquakes // earthquakes in the past day
   };
 
   // Create our map, giving it the streetmap and earthquakes layers to display by default
